@@ -1,5 +1,5 @@
 # DPM Bootstrap — Agent Instructions
-> This file is a direct instruction set for an AI agent to create and maintain a Dynamic Project Memory (DPM) system for any project. Execute step by step. Do not skip steps.
+> Execute step by step. Do not skip steps. This file is consumed once during setup, then archived.
 
 ---
 
@@ -19,7 +19,9 @@ project/
 └── README.md
 ```
 
-Create all folders. Create the three memory files using the templates below.
+Create all folders and the three memory files using the templates below.
+
+> If `dpm-init.sh` was already run, skip to STEP 5 — structure and stubs exist.
 
 ---
 
@@ -48,6 +50,26 @@ Decay: months. Only update on confirmed org/platform/scope changes.
 - **CI/CD**:
 - **Key integrations**:
 
+## Codebase Map
+<!-- For code projects only. Remove for doc-only projects. -->
+
+### Structure
+[Top-level directory layout with one-line descriptions per folder]
+
+### Key Entry Points
+- [main file / app bootstrap]
+- [route registry / API gateway]
+
+### Module Dependencies
+- [layer A → layer B → layer C]
+
+### Data Model Overview
+- [key entities and relationships, or link to schema in 02]
+
+### External API Dependencies
+| API / Service | Used By | Purpose |
+|---|---|---|
+
 ## Constraints & Guardrails
 - [Security / compliance constraints]
 - [Budget / timeline hard limits]
@@ -58,7 +80,7 @@ Decay: months. Only update on confirmed org/platform/scope changes.
 - ⚠️ No secrets — reference vault/env vars only
 ```
 
-**Fill instructions**: Scan source_docs/ and any project config files (README, package.json, docker-compose, CI configs, wiki). Extract stable facts into each section. Max 200 lines.
+**Fill instructions**: Scan source_docs/, project config files (README, package.json, pyproject.toml, docker-compose, CI configs), and the codebase itself. Extract stable facts into each section. For code projects, populate the Codebase Map by reading the directory tree and key entry points. Max 200 lines.
 
 ---
 
@@ -78,12 +100,34 @@ Decay: weeks. Update when deliverables, specs, or conventions change.
 | Decision | Choice | Date | Rationale |
 |---|---|---|---|
 
+## API Surface / Endpoint Index
+<!-- For projects with APIs. Remove if not applicable. -->
+| Method | Endpoint | Handler | Auth | Notes |
+|---|---|---|---|---|
+
+## DB Schema Summary
+<!-- Key tables/collections, relationships, migration status -->
+<!-- Link to full schema in _summaries/ or _extracted/ if large -->
+
 ## Conventions
 - **Branching**:
 - **Naming**:
 - **Code style**:
 - **Commit format**:
 - **Deploy process**:
+- **Error handling pattern**:
+- **Logging standard**:
+
+## Test Strategy
+- **Framework**:
+- **Coverage target**:
+- **Test locations**:
+- **CI integration**:
+
+## CI/CD Pipeline
+- **Stages**: [build → test → deploy]
+- **Environments**: [dev / staging / prod differences]
+- **Deploy trigger**:
 
 ## Known Risks & Mitigations
 | Risk | Impact | Mitigation | Status |
@@ -93,7 +137,7 @@ Decay: weeks. Update when deliverables, specs, or conventions change.
 <!-- Decisions promoted from 03 that are now settled -->
 ```
 
-**Fill instructions**: Read requirements docs, architecture docs, and any conventions/contributing guides in source_docs/. Summarize — do not paste full specs. Max 400 lines.
+**Fill instructions**: Read requirements docs, architecture docs, contributing guides, and the codebase structure. For code projects: scan route files for API index, schema/migration files for DB summary, CI config for pipeline, test config for test strategy. Summarize — do not paste full specs. Max 400 lines.
 
 ---
 
@@ -136,7 +180,7 @@ Decay: every session. This is your working memory.
 |---|---|
 ```
 
-**Fill instructions**: Set today's date in header. Build the Document Index by listing every file in source_docs/. Set Status = "NEW" for all. Fill Current Focus with the immediate project priorities. Max 300 lines.
+**Fill instructions**: Set today's date. Build Document Index listing every file in source_docs/. Set Status = "NEW" for all. Fill Current Focus with immediate priorities. For code projects: also index key code files (entry points, core modules) if they need summaries. Max 300 lines.
 
 ---
 
@@ -145,20 +189,22 @@ Decay: every session. This is your working memory.
 For each binary file in source_docs/ (docx, pptx, pdf, xlsx):
 
 1. Convert to plain text → save as `memory/_extracted/[filename_without_ext].txt`
-2. Use these methods:
-   - PDF: `pdftotext` or read with pymupdf
-   - DOCX: `pandoc -t plain` or read with python-docx
-   - PPTX: iterate slides/shapes, extract all text
-   - XLSX: export sheet names + headers + first 20 rows
-3. For text-native files (md, txt, yaml, json, csv): no extract needed — the source IS the extract
+2. Methods:
+   - PDF: `pdftotext` or pymupdf
+   - DOCX: `pandoc -t plain` or python-docx
+   - PPTX: iterate slides/shapes, extract text
+   - XLSX: sheet names + headers + first 20 rows
+3. Text-native files (md, txt, yaml, json, csv): no extract needed — source IS the extract
 
-Update the Document Index: set Extracted = ✅ for each processed file.
+For code projects: no extraction needed for code files — the source is already text. Only extract binary docs (specs, diagrams, exports).
+
+Update Document Index: set Extracted = ✅ for each processed file.
 
 ---
 
 ## STEP 6 — Generate Summaries (_summaries/)
 
-For each source file, create `memory/_summaries/[filename_without_ext].md` using this template:
+For each source file, create `memory/_summaries/[filename_without_ext].md`:
 
 ```markdown
 # Summary: [filename]
@@ -181,13 +227,37 @@ For each source file, create `memory/_summaries/[filename_without_ext].md` using
 - [Caveats, gaps, flags]
 ```
 
+For **code files** (when key modules need summaries):
+
+```markdown
+# Summary: [filename]
+> Source: src/[path]/[filename] | Last synced: YYYY-MM-DD
+
+## Purpose
+[1–2 sentences: what this module/file does]
+
+## Public Interface
+- [exported functions / classes / endpoints with signatures]
+
+## Dependencies
+- Imports: [key internal and external dependencies]
+- Used by: [which modules call this]
+
+## Key Logic
+- [Core algorithm or business logic, summarized]
+
+## Notes
+- [Edge cases, known issues, TODO items]
+```
+
 **Rules**:
 - Max 80 lines per summary
-- Summarize, never copy verbatim — _extracted/ exists for quotes
-- Include specific numbers, names, dates — not vague descriptions
+- Summarize, never copy verbatim
+- Include specific names, numbers, types — not vague descriptions
 - Flag uncertain content with [Unverified]
+- Only summarize key code files (entry points, core services, shared utils) — not every file
 
-Update the Document Index: set Summary = ✅ for each processed file.
+Update Document Index: set Summary = ✅ for each processed file.
 
 ---
 
@@ -221,11 +291,13 @@ alwaysApply: true
     • User needs verbatim quote
     • Summary lacks needed detail
     • User explicitly requests full file
+- Need context on a code file? → Read memory/_summaries/[file].md if it exists
+  → Only open the source code file if no summary exists or more detail needed
 - Decision made? → APPEND to Decisions Log in 03 (date, decision, rationale, reversible?)
 - New unverified info? → Add to New Intel in 03 with tag: [Inference] | [Unverified] | [Speculation]
 - New source file added? →
-    1. Generate extract → _extracted/
-    2. Generate summary → _summaries/
+    1. Generate extract → _extracted/ (if binary)
+    2. Generate summary → _summaries/ (if key file)
     3. Add row to Document Index in 03 (Status = "NEW")
     4. Integrate key points into 01 or 02
 
@@ -255,10 +327,10 @@ Read these files before any action:
 Check Document Index for "NEW" or "Stale" entries. Update Session Header date.
 
 ## During Session
-- File context needed → read memory/_summaries/ first, then _extracted/, then source_docs/ (escalation order)
+- File/code context needed → read memory/_summaries/ first, then _extracted/, then source file (escalation order)
 - Decision made → append to Decisions Log in 03
 - New info → add to New Intel in 03 with uncertainty tag
-- New source file → extract + summarize + index + integrate
+- New source file → extract (if binary) + summarize + index + integrate
 
 ## Session End
 - Append to Change Log in 03
@@ -274,7 +346,7 @@ Check Document Index for "NEW" or "Stale" entries. Update Session Header date.
 
 ### Codex / Other Agents
 
-Adapt the rules above to the agent's instruction format. The contract:
+Adapt the rules above. The contract:
 1. Read 3 memory files at start
 2. Summaries before originals
 3. Append-only logs
@@ -284,25 +356,25 @@ Adapt the rules above to the agent's instruction format. The contract:
 
 ## STEP 8 — Validate
 
-Run this checklist before first session:
-
 - [ ] `source_docs/` contains all project artifacts
 - [ ] `memory/01_static_context.md` has project identity, stakeholders, environment, constraints
-- [ ] `memory/02_static_work.md` has requirements summary, settled decisions, conventions
-- [ ] `memory/03_running_state.md` has session header, document index (all files listed), empty logs
+- [ ] `memory/01_static_context.md` has Codebase Map (if code project)
+- [ ] `memory/02_static_work.md` has requirements, settled decisions, conventions
+- [ ] `memory/02_static_work.md` has API index, DB schema, test strategy, CI/CD (if code project)
+- [ ] `memory/03_running_state.md` has session header, document index, empty logs
 - [ ] `memory/_extracted/` has .txt for every binary source file
-- [ ] `memory/_summaries/` has .md for every source file
-- [ ] Document Index in 03 shows ✅ for Summary and Extracted columns, Status = "NEW" or "Current"
+- [ ] `memory/_summaries/` has .md for key source files and key code modules
+- [ ] Document Index shows ✅ for Summary and Extracted columns
 - [ ] Agent rules file installed (.cursorrules / CLAUDE.md / equivalent)
 - [ ] Agent can start a session reading ONLY the 3 memory files (< 15K tokens)
 
 ---
 
-## ONGOING MAINTENANCE RULES
+## ONGOING MAINTENANCE
 
 ### Staleness Detection
 ```
-For each source file:
+For each indexed file:
   IF file modified date ≠ Modified column in Document Index:
     → Set Status = "Stale"
     → Notify user at session start
@@ -320,10 +392,10 @@ For each source file:
 ### Promotion Flow
 - Confirmed hot notes (03) → merge into warm (02)
 - Settled warm facts (02) → merge into cold (01)
-- Always remove from source tier after promoting
+- Remove from source tier after promoting
 
 ### Content Discipline
 - One fact, one home: org fact → 01, spec → 02, session decision → 03
-- Label uncertainty: [Inference], [Unverified], [Speculation], [Confirmed]
+- Label uncertainty: [Inference] | [Unverified] | [Speculation] | [Confirmed]
 - Summarize in memory, cite in index — never duplicate full specs
 - No secrets — reference vault/env vars only
