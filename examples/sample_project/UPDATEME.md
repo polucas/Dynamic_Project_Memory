@@ -1,0 +1,1 @@
+# *UPDATEME                        # TO .cursrorrules OR CLAUDE.md OR your agent's protocol*
