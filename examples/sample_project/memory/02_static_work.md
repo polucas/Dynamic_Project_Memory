@@ -1,67 +1,43 @@
 # 02 — Static Work Context
 > Decay: WARM | Last updated: 2026-05-29
 
-## Requirements Summary
-- Users can create projects, invite members, manage tasks with status workflows
-- Real-time notifications via WebSocket + email digests
-- Role-based access: Owner, Admin, Member, Viewer
-- Full spec: source_docs/requirements_v2.docx → _summaries/requirements_v2.md
+## Scope & Requirements Summary
+- Deploy IQVIA NBA solution for 3 therapeutic areas (cardiology, respiratory, diabetes)
+- ~120 field reps across German-speaking and French-speaking Switzerland
+- Integration with Menarini's Veeva CRM (push NBA recommendations as tasks)
+- Full SOW: source_docs/sow_menarini_nba_v2.docx → _summaries/sow_menarini_nba_v2.md
 
-## Architecture & Design Decisions (Settled)
+## Key Deliverables
+| # | Deliverable | Owner | Due | Status |
+|---|---|---|---|---|
+| 1 | Data assessment & gap analysis | Sara Fontana | 2026-06-15 | In progress |
+| 2 | NBA model configuration (3 TAs) | Sara Fontana | 2026-07-15 | Not started |
+| 3 | Veeva CRM integration (API + UI) | Nina Huber / IQVIA | 2026-08-01 | Not started |
+| 4 | UAT with 10 pilot reps | Jed Malec | 2026-08-20 | Not started |
+| 5 | Training materials + workshops | Jed Malec | 2026-09-01 | Not started |
+| 6 | Go-live + 2-week hypercare | Full team | 2026-09-15 | Not started |
+
+## Settled Decisions
 | Decision | Choice | Date | Rationale |
 |---|---|---|---|
-| Database | PostgreSQL 15 (RDS) | 2026-03-01 | Team expertise, JSON support, strong typing |
-| ORM | Sequelize v6 | 2026-03-01 | Existing team knowledge, migration support |
-| Auth | JWT + refresh tokens | 2026-03-05 | Stateless API, mobile-ready |
-| Cache | Redis (ElastiCache) | 2026-03-10 | Session store + query cache + pub/sub |
-| Queue | Bull (Redis-backed) | 2026-03-10 | Email jobs, webhook delivery, cleanup tasks |
-| Real-time | Socket.io | 2026-04-01 | Broad client support, fallback to polling |
+| NBA platform | IQVIA Orchestrated Analytics | 2026-04-10 | Client requirement per SOW |
+| CRM integration method | Veeva API (real-time push) | 2026-05-15 | Batch rejected — reps need intra-day updates |
+| Channel prioritization | Detail, email, remote call | 2026-05-20 | Aligned with Swiss market norms; no SMS |
+| Language handling | Dual outputs (DE + FR) | 2026-05-20 | Rep territories are language-defined |
 
-## API Surface / Endpoint Index
-| Method | Endpoint | Handler | Auth | Notes |
-|---|---|---|---|---|
-| POST | /auth/register | auth.register | Public | Rate-limited 5/min |
-| POST | /auth/login | auth.login | Public | Returns JWT + refresh |
-| GET | /projects | project.list | User | Paginated, filterable |
-| POST | /projects | project.create | User | Creates + assigns owner |
-| GET | /projects/:id/tasks | task.list | Member | Supports status filter |
-| POST | /projects/:id/tasks | task.create | Member | Validates assignee membership |
-| PATCH | /tasks/:id | task.update | Member | Status transition validation |
-| WS | /ws | websocket.handler | User | Real-time task/comment updates |
-
-## DB Schema Summary
-- 8 tables: users, projects, project_members, tasks, comments, attachments, notifications, audit_log
-- Key indexes: tasks(project_id, status), project_members(user_id), audit_log(created_at)
-- Migrations: 14 applied, all current
-- Full schema: _summaries/schema_dump.md
-
-## Conventions
-- **Branching**: GitFlow — main, develop, feature/*, bugfix/*, release/*
-- **Naming**: camelCase (code), snake_case (DB), kebab-case (URLs)
-- **Code style**: ESLint + Prettier, enforced in CI
-- **Commit format**: Conventional Commits (feat:, fix:, chore:, docs:)
-- **Deploy process**: PR → develop → CI green → merge to main → auto-deploy to staging → manual promote to prod
-- **Error handling**: All services return `Result<T, AppError>` — no thrown exceptions in business logic
-- **Logging**: Structured JSON via Winston, correlation IDs on all requests
-
-## Test Strategy
-- **Framework**: Jest + Supertest
-- **Coverage target**: 80% lines, enforced in CI
-- **Test locations**: `__tests__/` mirrors `src/` structure
-- **CI integration**: Tests run on every PR, block merge if failing
-
-## CI/CD Pipeline
-- **Stages**: lint → test → build → push to ECR → deploy
-- **Environments**: dev (auto-deploy from develop), staging (auto from main), prod (manual promotion)
-- **Deploy trigger**: GitHub Actions on push to develop/main
+## Methodology / Approach
+- IQVIA standard NBA deployment framework (5-phase)
+- Phase 1: Data assessment → Phase 2: Model config → Phase 3: Integration → Phase 4: UAT → Phase 5: Go-live
+- Agile within phases (2-week sprints), waterfall across phases (gate reviews)
+- Weekly client status call (Thursdays 10:00 CET)
 
 ## Known Risks & Mitigations
 | Risk | Impact | Mitigation | Status |
 |---|---|---|---|
-| WebSocket scaling on ECS | High concurrency may need sticky sessions | Redis pub/sub adapter for Socket.io | Implemented |
-| Sequelize N+1 queries | Slow list endpoints | Eager loading + query review checklist | Monitoring |
-| Email deliverability | Users miss notifications | SendGrid dedicated IP + SPF/DKIM | Configured |
+| Menarini data quality issues (missing HCP consent flags) | Delays Phase 1 by 2+ weeks | Early data profiling sprint; escalation path to Marco | Monitoring |
+| Veeva API rate limits during peak hours | NBA recommendations delayed for reps | Implement queuing + off-peak batch fallback | Planned |
+| French-language content gaps in NBA templates | Poor adoption in Romandie region | Engage Menarini's local marketing for FR content review | Not started |
+| Fixed-price overrun on integration complexity | Margin erosion | Detailed integration spike in Week 3; CR process defined | Planned |
 
 ## Appendix: Promoted Decisions
-- 2026-04-15: Decided to use cursor-based pagination (not offset) for all list endpoints — better performance at scale
-- 2026-05-01: Adopted Result pattern for error handling — cleaner than try/catch in service layer
+<!-- Decisions promoted from 03 that are now settled -->

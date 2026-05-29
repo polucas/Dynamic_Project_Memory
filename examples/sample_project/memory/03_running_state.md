@@ -3,42 +3,46 @@
 
 ## Session Header
 - **Today**: 2026-05-29
-- **Current milestone / sprint**: Sprint 12 — Notification overhaul
-- **Last session summary**: Implemented WebSocket reconnection logic; fixed race condition in task status transitions
+- **Current phase / milestone**: Phase 1 — Data Assessment (Week 3 of 4)
+- **Last session summary**: Reviewed initial data profiling results; identified 3 critical gaps in HCP consent data; drafted escalation email to Marco
 
 ## Current Focus
-- [ ] Add email digest feature (daily summary of task changes per project)
-- [ ] Refactor notification service to support pluggable channels
-- [ ] Write integration tests for WebSocket events
+- [ ] Finalize data gap analysis report (due 2026-06-01 for Steering Committee)
+- [ ] Map Menarini's HCP segmentation to IQVIA NBA standard segments
+- [ ] Prepare Phase 1 gate review deck
 
 ## Document Index
 | # | Source File | Summary | Extracted | Absorbed Into | Status | Modified |
 |---|---|---|---|---|---|---|
-| 1 | requirements_v2.docx | ✅ | ✅ | 02 (Requirements) | Current | 2026-04-10 |
-| 2 | api_spec_v3.yaml | ✅ | N/A | 02 (API Surface) | Current | 2026-05-20 |
-| 3 | schema_dump.sql | ✅ | N/A | 02 (DB Schema) | Current | 2026-05-25 |
-| 4 | architecture_diagram.pptx | ✅ | ✅ | 01 (Codebase Map) | Current | 2026-03-15 |
-| 5 | notification_rfc.md | ✅ | N/A | 02 (Architecture) | Current | 2026-05-22 |
-| 6 | client_feedback_may.pdf | ❌ | ✅ | — | NEW | 2026-05-28 |
+| 1 | sow_menarini_nba_v2.docx | ✅ | ✅ | 02 (Scope) | Current | 2026-04-10 |
+| 2 | stakeholder_map.pptx | ✅ | ✅ | 01 (Stakeholders) | Current | 2026-04-15 |
+| 3 | data_inventory_menarini.xlsx | ✅ | ✅ | 02 (Methodology) | Current | 2026-05-10 |
+| 4 | veeva_api_spec.pdf | ✅ | ✅ | 02 (Settled Decisions) | Current | 2026-05-12 |
+| 5 | nba_framework_guide.pdf | ✅ | ✅ | 02 (Methodology) | Current | 2026-03-01 |
+| 6 | data_profiling_results_w3.xlsx | ❌ | ✅ | — | NEW | 2026-05-28 |
 
 ## Open Questions / Blockers
-- [ ] Should email digests be opt-in or opt-out by default? (waiting on Lisa)
-- [ ] Redis memory limits on staging — need DevOps to increase (tagged James)
+- [ ] HCP consent flags missing for ~15% of records — waiting on Marco's team to investigate (escalated 2026-05-28)
+- [ ] Confirm: does Menarini want NBA recommendations at HCP level or brick level? (ask Thomas at Thursday call)
+- [ ] French-language NBA message templates — who owns content creation on Menarini side?
 
 ## Decisions Log
 | Date | Decision | Rationale | Reversible? |
 |---|---|---|---|
-| 2026-05-22 | Notification service uses strategy pattern for channels | Easy to add SMS/push later without modifying core | Yes |
-| 2026-05-25 | Email digests sent at 8am user-local-time | Matches competitor behavior, avoids midnight noise | Yes |
-| 2026-05-29 | Use Bull's built-in cron for digest scheduling | Simpler than separate cron service, already in stack | Yes (until prod deploy) |
+| 2026-05-15 | Use Veeva API (real-time) over batch file | Reps need intra-day updates; batch = 24h delay | Yes (until integration build starts) |
+| 2026-05-20 | Channels: detail + email + remote call only | Swiss market norms; SMS not used professionally | Yes |
+| 2026-05-20 | Dual language outputs (DE + FR) | Rep territories are language-defined | No (architectural) |
+| 2026-05-28 | Escalate HCP consent gap to client Data Lead | 15% missing = compliance risk; can't proceed without resolution | N/A |
 
 ## New Intel / Unverified
-- [Unverified] Client may request Slack DM notifications (mentioned in feedback PDF, not confirmed)
-- [Inference] Current Redis instance may need upgrade if digest jobs exceed 10K/day
+- [Unverified] Thomas mentioned Menarini may add oncology as 4th TA in Phase 2 — not in SOW
+- [Inference] Data quality issues may push Phase 1 gate review by 1 week (currently monitoring)
+- [Confirmed] Veeva sandbox access granted 2026-05-27 — Nina sent credentials via secure channel
 
 ## Change Log
 | Date | Change |
 |---|---|
-| 2026-05-22 | Created notification_rfc.md; decided on strategy pattern for channels |
-| 2026-05-25 | Implemented WebSocket reconnection; fixed task status race condition |
-| 2026-05-29 | Decided on Bull cron for digests; flagged client_feedback_may.pdf as NEW |
+| 2026-05-20 | Settled on channel mix and language approach |
+| 2026-05-25 | Received data_inventory_menarini.xlsx; integrated into 02 |
+| 2026-05-28 | Received data_profiling_results_w3.xlsx (NEW); escalated HCP consent gap |
+| 2026-05-29 | Promoted Veeva sandbox access to confirmed; updated open questions |

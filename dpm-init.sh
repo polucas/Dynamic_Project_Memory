@@ -1,5 +1,5 @@
 #!/bin/bash
-# dpm-init.sh — Initialize DPM directory structure for a new project
+# dpm-init.sh — Initialize DPM directory structure for a business project
 # Usage: ./dpm-init.sh [project_directory]
 
 set -e
@@ -8,10 +8,8 @@ PROJECT_DIR="${1:-.}"
 
 echo "🔧 Initializing DPM in: $PROJECT_DIR"
 
-# Create directory structure
 mkdir -p "$PROJECT_DIR"/{source_docs,memory/{_summaries,_extracted,_archive}}
 
-# Create stub memory files
 cat > "$PROJECT_DIR/memory/01_static_context.md" << 'EOF'
 # 01 — Static Context
 > Decay: COLD | Last updated: YYYY-MM-DD
@@ -19,7 +17,7 @@ cat > "$PROJECT_DIR/memory/01_static_context.md" << 'EOF'
 ## Project Identity
 - **Project name**:
 - **One-line description**:
-- **Repository / workspace**:
+- **Client / sponsor**:
 - **In scope**:
 - **Out of scope**:
 
@@ -27,84 +25,41 @@ cat > "$PROJECT_DIR/memory/01_static_context.md" << 'EOF'
 | Role | Person | Contact / Notes |
 |---|---|---|
 
-## Environment & Tooling
-- **Language / framework**:
-- **Infra / cloud**:
-- **CI/CD**:
-- **Key integrations**:
-
-## Codebase Map
-<!-- For code projects: high-level module/service map -->
-<!-- For doc-only projects: remove this section -->
-
-### Structure
-```
-src/
-└── [describe top-level layout]
-```
-
-### Key Entry Points
-- [main file / bootstrap]
-
-### Module Dependencies
-- [module A → module B → module C]
-
-### Data Model Overview
-- [key entities and relationships]
-
-### External API Dependencies
-| API / Service | Used By | Purpose |
-|---|---|---|
+## Tools & Platforms
+- **Collaboration**: [Teams, Slack, SharePoint, etc.]
+- **Project tracking**: [Jira, Planner, Asana, etc.]
+- **Data / analytics**: [platforms, BI tools, data sources]
+- **Document repository**: [SharePoint, Google Drive, etc.]
 
 ## Constraints & Guardrails
-- [Security / compliance constraints]
 - [Budget / timeline hard limits]
-- [Data sensitivity classification]
+- [Compliance / regulatory requirements]
+- [Data sensitivity / NDA scope]
+- [Approval gates or governance processes]
 
 ## Reference Links
-- [Links to repo, wiki, Jira, etc.]
-- ⚠️ No secrets — reference vault/env vars only
+- [Links to project site, shared drives, trackers]
+- ⚠️ No confidential data in memory — reference secure locations only
 EOF
 
 cat > "$PROJECT_DIR/memory/02_static_work.md" << 'EOF'
 # 02 — Static Work Context
 > Decay: WARM | Last updated: YYYY-MM-DD
 
-## Requirements Summary
-- [Summarized acceptance criteria — NOT full paste]
-- [Link to full spec in source_docs/ or _summaries/]
+## Scope & Requirements Summary
+- [Summarized objectives and deliverables — NOT full paste]
+- [Link to full SOW/brief in source_docs/ or _summaries/]
 
-## Architecture & Design Decisions (Settled)
+## Key Deliverables
+| # | Deliverable | Owner | Due | Status |
+|---|---|---|---|---|
+
+## Settled Decisions
 | Decision | Choice | Date | Rationale |
 |---|---|---|---|
 
-## API Surface / Endpoint Index
-<!-- For code projects with APIs -->
-| Method | Endpoint | Handler | Auth | Notes |
-|---|---|---|---|---|
-
-## DB Schema Summary
-<!-- Key tables/collections, relationships, migration status -->
-
-## Conventions
-- **Branching**:
-- **Naming**:
-- **Code style**:
-- **Commit format**:
-- **Deploy process**:
-- **Error handling pattern**:
-- **Logging standard**:
-
-## Test Strategy
-- **Framework**:
-- **Coverage target**:
-- **Test locations**:
-- **CI integration**:
-
-## CI/CD Pipeline
-- **Stages**: [build → test → deploy]
-- **Environments**: [dev / staging / prod differences]
-- **Deploy trigger**:
+## Methodology / Approach
+- [Frameworks, methodologies, analytical approaches being used]
 
 ## Known Risks & Mitigations
 | Risk | Impact | Mitigation | Status |
@@ -120,7 +75,7 @@ cat > "$PROJECT_DIR/memory/03_running_state.md" << 'EOF'
 
 ## Session Header
 - **Today**: YYYY-MM-DD
-- **Current milestone / sprint**:
+- **Current phase / milestone**:
 - **Last session summary**:
 
 ## Current Focus
@@ -154,8 +109,4 @@ echo ""
 echo "Next steps:"
 echo "  1. Drop project files into $PROJECT_DIR/source_docs/"
 echo "  2. Give your AI agent DPM_Bootstrap_Agent_Instructions.md"
-echo "  3. Tell it: 'Execute all steps for this project starting from STEP 5'"
-echo "     (Steps 1-4 are done — structure and stubs are created)"
-echo ""
-echo "Directory structure:"
-find "$PROJECT_DIR" -type f -o -type d | head -20
+echo "  3. Tell it: 'Execute all steps starting from STEP 5'"

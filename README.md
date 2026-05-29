@@ -1,6 +1,6 @@
 # Dynamic Project Memory (DPM)
 
-A lightweight, agent-agnostic system that gives AI coding assistants persistent project context without burning through your context window or token budget.
+A lightweight, agent-agnostic system that gives AI assistants persistent project context without burning through your context window or token budget.
 
 ## What It Does
 
@@ -12,13 +12,13 @@ DPM replaces the cycle of re-uploading files, re-explaining decisions, and losin
 
 | Tier | File | What It Holds | Update Frequency |
 |---|---|---|---|
-| 🧊 Cold | `01_static_context.md` | Org, people, tech stack, codebase map | Months |
-| 🟡 Warm | `02_static_work.md` | Requirements, architecture, APIs, conventions | Weeks |
+| 🧊 Cold | `01_static_context.md` | Org, people, platforms, constraints | Months |
+| 🟡 Warm | `02_static_work.md` | Scope, deliverables, methodology, risks | Weeks |
 | 🔴 Hot | `03_running_state.md` | Current focus, decisions, changelog | Every session |
 
 **Two supporting layers (loaded on-demand, not at startup):**
 
-- `_summaries/` — short digest of each source/code file (~80 lines). AI reads this first.
+- `_summaries/` — short digest of each source file (~80 lines). AI reads this first.
 - `_extracted/` — full plain-text mirror of binary files. AI reads this only for quotes or search.
 
 **Result:** session startup costs 5–15K tokens instead of 50–200K+ for loading full files.
@@ -35,7 +35,7 @@ project/
 │   ├── _summaries/           # AI-readable digests
 │   ├── _extracted/           # Full text for grep/quotes
 │   └── _archive/             # Rotated old content
-├── .cursorrules              # Agent protocol (or CLAUDE.md, etc.)
+├── UPDATEME                  # Agent protocol (.cursorrules or CLAUDE.md, etc.)
 └── README.md
 ```
 
@@ -65,14 +65,12 @@ The agent will automatically:
 - Escalate from summary → extract → full file only when needed
 - Keep the hot file trimmed (auto-archive after 300 lines)
 
-If you add a new file to `source_docs/`, tell the agent — it will extract, summarize, and index it.
-
 ## Repo Contents
 
 | File | Audience | Purpose |
 |---|---|---|
 | `README.md` | Humans | Quick orientation (this file) |
-| `Dynamic_Project_Memory_DPM_v2.md` | Humans | Full reference: rationale, templates, maintenance, examples |
+| `Dynamic_Project_Memory_DPM_v2.md` | Humans | Full reference: rationale, templates, maintenance |
 | `DPM_Bootstrap_Agent_Instructions.md` | AI Agents | Step-by-step executable setup instructions |
 | `dpm-init.sh` | Humans/CI | Shell script to scaffold the directory structure |
 | `CONTRIBUTING.md` | Contributors | How to contribute to the DPM standard |
@@ -88,4 +86,5 @@ Cursor · Claude Code · Codex · Windsurf · Aider · any agent that reads Mark
 MIT — see [LICENSE](LICENSE).
 
 ## Credits
+
 Created by Jed Malec (https://www.linkedin.com/in/jed-malec/)
