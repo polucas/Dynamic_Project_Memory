@@ -39,7 +39,7 @@ project/
 │   └── _archive/             # Rotated old content
 ├── DPM_instructions/         # Agent rules, DPM protocol, project-specific AI instructions
 ├── agent_outputs/            # AI-generated working outputs and deliverables
-├── .cursor/                  # Cursor rules, skills, and agent configuration
+├── .agent/                   # Agent rules, skills, and configuration (e.g., .cursor/, .claude/, etc.)
 └── README.md
 ```
 
@@ -94,7 +94,7 @@ Then give your AI agent `DPM_Bootstrap_Agent_Instructions.md` and tell it:
 2. Give the agent `DPM_Bootstrap_Agent_Instructions.md` and `Dynamic_Project_Memory_DPM_v2.md`
 3. Tell it: *"Execute all steps for this project"*
 
-The agent will create only the DPM-managed writable areas, build the manifest, extract, summarize, populate all tiers, and write its protocol under `DPM_instructions/` and `.cursor/` as needed.
+The agent will create only the DPM-managed writable areas, build the manifest, extract, summarize, populate all tiers, and write its protocol under `DPM_instructions/` and `.agent/` (or your platform's equivalent) as needed.
 
 ## After Setup
 
@@ -112,7 +112,7 @@ DPM is designed for shared, long-running projects when agents follow these rules
 - Use stable IDs for documents, decisions, questions, risks, and deliverables.
 - Attribute durable updates with actor and date.
 - Keep `source_files/` read-only for agents. Agents must not create, modify, move, rename, or delete files there.
-- Allow agents to create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.cursor/`.
+- Allow agents to create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/` (e.g., `.cursor/`, `.claude/`).
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: creating, modifying, moving, renaming, or deleting files anywhere else.
 - Treat Decisions Log and Change Log as append-only audit logs.
 - Prune active sections such as Current Focus, Open Questions, Blockers, and New Intel when items are resolved or promoted.
@@ -125,7 +125,7 @@ DPM is designed for shared, long-running projects when agents follow these rules
 - `/scanrepo` reports new, changed, missing, duplicate, stale, or unprocessed files without editing.
 - `/scanandingest` scans the repo, ingests safe new or stale files, and pauses for conflicts or ambiguous cases.
 
-For regular ingestion, install deterministic extractors rather than asking the LLM to read full binaries: `pdftotext` or PyMuPDF for PDFs, `pandoc` or `python-docx` for Word files, `python-pptx` for PowerPoint, and `pandas` + `openpyxl` for Excel. Put reusable Cursor skills under `.cursor/skills/` and rules under `.cursor/rules/`.
+For regular ingestion, install deterministic extractors rather than asking the LLM to read full binaries: `pdftotext` or PyMuPDF for PDFs, `pandoc` or `python-docx` for Word files, `python-pptx` for PowerPoint, and `pandas` + `openpyxl` for Excel. Put reusable agent skills under your agent's skills directory (e.g., `.cursor/skills/`) and rules under its rules directory (e.g., `.cursor/rules/`).
 
 ## Repo Contents
 

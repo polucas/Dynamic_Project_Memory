@@ -62,7 +62,7 @@ project/
 │
 ├── DPM_instructions/                    # Agent rules, DPM protocol, project-specific AI instructions
 ├── agent_outputs/                       # AI-generated working outputs and deliverables
-├── .cursor/                             # Cursor rules, skills, and agent configuration
+├── .agent/                              # Agent rules, skills, and configuration (e.g., .cursor/, .claude/, etc.)
 └── README.md
 ```
 
@@ -199,7 +199,7 @@ Each source file gets a corresponding summary. This is the layer that keeps toke
 | **Label uncertainty** | [Inference], [Unverified], [Speculation] in 03 until confirmed |
 | **Stable IDs for shared work** | IDs let multiple people update the same decision, blocker, deliverable, risk, or source file unambiguously |
 | **Active memory is pruned** | Resolved/promoted/rejected items leave active sections after the audit trail or promoted home is updated |
-| **Writable folders are limited** | Agents may create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.cursor/` |
+| **Writable folders are limited** | Agents may create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/` |
 | **No confidential data in memory** | Reference secure locations; never hardcode sensitive info |
 | **Summaries ≠ extracts** | _summaries/ = AI digest; _extracted/ = full text for grep |
 
@@ -256,7 +256,7 @@ Track each source file in `_manifest.json` using path, content hash, modified ti
 ## 7. Bootstrap Checklist
 
 - [ ] Human/project owner or approved setup script creates `source_files/` and places source artifacts there
-- [ ] Agent creates DPM-managed structure: memory/, _summaries/, _extracted/, _archive/, DPM_instructions/, agent_outputs/, .cursor/
+- [ ] Agent creates DPM-managed structure: memory/, _summaries/, _extracted/, _archive/, DPM_instructions/, agent_outputs/, .agent/
 - [ ] Create `memory/_manifest.json`
 - [ ] Drop all existing artifacts into source_files/
 - [ ] Extract binary files → _extracted/
@@ -321,9 +321,9 @@ Decisions Log ──────────►   Settled Decisions table
 
 - Treat memory files as shared project state. Read the latest target section immediately before editing it.
 - Make small, scoped updates. Avoid reformatting whole tables or rewriting unrelated sections.
-- Create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.cursor/`. Never create, modify, move, rename, or delete files in `source_files/`.
-- **STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN**: creating, modifying, moving, renaming, or deleting files outside `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.cursor/`.
-- Store Cursor rules and skills under `.cursor/`, preferably `.cursor/rules/` and `.cursor/skills/`.
+- Create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/`. Never create, modify, move, rename, or delete files in `source_files/`.
+- **STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN**: creating, modifying, moving, renaming, or deleting files outside `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/`.
+- Store agent rules and skills under `.agent/` (or the equivalent, e.g. `.cursor/rules/` and `.cursor/skills/`).
 - Attribute durable changes with date and actor in the relevant row or log entry.
 - Use stable IDs for decisions (`DEC-...`), questions (`Q-...`), risks (`RISK-...`), deliverables (`DEL-...`), and documents (`DOC-...`).
 - If two sources conflict on owner, date, scope, requirement, or decision, keep both citations and mark the item `Needs Review`.
@@ -395,7 +395,7 @@ brew install poppler pandoc
 choco install poppler pandoc
 ```
 
-Create reusable ingestion skills under `.cursor/skills/`, such as `.cursor/skills/ingestfile/SKILL.md` and `.cursor/skills/scanrepo/SKILL.md`, if the same project will ingest files daily.
+Create reusable ingestion skills under the agent's skills directory (e.g., `.cursor/skills/`), such as `.../ingestfile/SKILL.md` and `.../scanrepo/SKILL.md`, if the same project will ingest files daily.
 
 ### Multi-Project Scaling
 ```
@@ -405,13 +405,13 @@ workspace/
 │   ├── memory/
 │   ├── DPM_instructions/
 │   ├── agent_outputs/
-│   └── .cursor/
+│   └── .agent/
 ├── project-beta/
 │   ├── source_files/
 │   ├── memory/
 │   ├── DPM_instructions/
 │   ├── agent_outputs/
-│   └── .cursor/
+│   └── .agent/
 └── _global_memory/          # Optional: cross-project facts
     └── org_context.md
 ```

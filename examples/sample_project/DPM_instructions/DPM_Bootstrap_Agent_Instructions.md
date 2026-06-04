@@ -18,7 +18,7 @@ project/
 │   └── _archive/                 # Rotated hot content, superseded files
 ├── DPM_instructions/             # Agent rules, DPM protocol, project-specific AI instructions
 ├── agent_outputs/                # AI-generated working outputs and deliverables
-├── .cursor/                      # Cursor rules, skills, and agent configuration
+├── .agent/                       # Agent rules, skills, and configuration (e.g., .cursor/, .claude/, etc.)
 └── README.md
 ```
 
@@ -26,9 +26,9 @@ Agents may create or modify files only in:
 - `memory/`
 - `DPM_instructions/`
 - `agent_outputs/`
-- `.cursor/`
+- `.agent/` (or your platform's equivalent, e.g., `.cursor/`, `.claude/`)
 
-**STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN**: creating, modifying, moving, renaming, or deleting files outside `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.cursor/`.
+**STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN**: creating, modifying, moving, renaming, or deleting files outside `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/`.
 
 Create those DPM-managed folders, the three memory files, and `_manifest.json` using the templates below. Do not create, modify, move, rename, or delete files in `source_files/`. If `source_files/` does not exist or has no project artifacts, ask the human/project owner to add the source files there.
 
@@ -242,7 +242,7 @@ Update `_manifest.json` and the Document Index in 03: set Summary = `yes`, recor
 
 ## STEP 8 — Install Agent Rules
 
-Create the agent protocol under `DPM_instructions/`, for example `DPM_instructions/dpm-protocol.md`. For Cursor, create rules under `.cursor/rules/` and reusable ingestion skills under `.cursor/skills/`.
+Create the agent protocol under `DPM_instructions/`, for example `DPM_instructions/dpm-protocol.md`. Depending on your agent, create rules and reusable ingestion skills in its specific configuration directory (e.g., `.cursor/rules/` and `.cursor/skills/` for Cursor).
 
 ### Cursor (.cursorrules or .cursor/rules/01-dpm-protocol.mdc)
 
@@ -290,7 +290,7 @@ alwaysApply: true
 
 ## Guardrails
 - NEVER create, modify, move, rename, or delete files in source_files/
-- ONLY create or modify files in memory/, DPM_instructions/, agent_outputs/, or .cursor/
+- ONLY create or modify files in memory/, DPM_instructions/, agent_outputs/, or .agent/
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
 - NEVER load full source files unless explicitly needed
 - NEVER delete from Decisions Log or Change Log (append-only)
@@ -328,7 +328,7 @@ Check memory/_manifest.json for changed hashes, manifest/index drift, and proces
 
 ## Rules
 - source_files/ is read-only
-- Agents may create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .cursor/
+- Agents may create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
 - Logs are append-only
 - Active sections are pruned
@@ -344,7 +344,7 @@ Adapt the rules above. The contract:
 3. Manifest and Document Index stay aligned
 4. Append-only logs, pruned active sections
 5. Never create or modify source_files/
-6. Create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .cursor/
+6. Create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
 7. STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
 
 ---
@@ -359,8 +359,8 @@ Adapt the rules above. The contract:
 - [ ] `memory/_extracted/` has .txt for every binary source file
 - [ ] `memory/_summaries/` has .md for every source file
 - [ ] Document Index agrees with `_manifest.json`
-- [ ] Agent rules file created in `DPM_instructions/` and, for Cursor, `.cursor/rules/`
-- [ ] Optional ingestion skills created under `.cursor/skills/`
+- [ ] Agent rules file created in `DPM_instructions/` and the agent's specific rules directory (e.g., `.cursor/rules/`)
+- [ ] Optional ingestion skills created under the agent's skills directory
 - [ ] Agent can start a session reading ONLY the 3 memory files (< 15K tokens)
 
 ---
@@ -408,7 +408,7 @@ For each indexed file:
 ### Multi-Person Rules
 - Read the latest target section before editing shared memory.
 - Make small, scoped updates; avoid reformatting unrelated tables.
-- Create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.cursor/`.
+- Create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/`.
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: creating, modifying, moving, renaming, or deleting files anywhere else.
 - Never create, modify, move, rename, or delete files in `source_files/`.
 - Attribute durable changes with date and actor.
@@ -450,7 +450,7 @@ brew install poppler pandoc
 choco install poppler pandoc
 ```
 
-For daily ingestion, create Cursor skills under `.cursor/skills/`, for example `.cursor/skills/ingestfile/SKILL.md`, `.cursor/skills/scanrepo/SKILL.md`, and `.cursor/skills/scanandingest/SKILL.md`.
+For daily ingestion, create agent skills under the agent's skills directory (e.g., `.cursor/skills/`), for example `.../ingestfile/SKILL.md`, `.../scanrepo/SKILL.md`, and `.../scanandingest/SKILL.md`.
 
 #### `/scanrepo`
 Compare `source_files/`, `_manifest.json`, and the 03 Document Index. Report new, changed, missing, duplicate, superseded, archived, errored, and unprocessed files. Do not ingest or edit unless asked.
