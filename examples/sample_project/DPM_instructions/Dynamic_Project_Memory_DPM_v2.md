@@ -46,6 +46,7 @@ project/
 │   ├── 02_static_work.md               # WARM  — scope, deliverables, methodology
 │   ├── 03_running_state.md             # HOT   — today's focus, decisions, changelog
 │   ├── _manifest.json                  # Machine-readable processed-file registry
+│   ├── .dpm_lock                       # Concurrency lock for multi-agent use
 │   │
 │   ├── _summaries/                     # One .md per source file (AI-readable digest)
 │   │   ├── sow_v2.md
@@ -329,6 +330,25 @@ Decisions Log ──────────►   Settled Decisions table
 - If two sources conflict on owner, date, scope, requirement, or decision, keep both citations and mark the item `Needs Review`.
 - Newer files do not automatically supersede older files unless the source states that relationship or a human confirms it.
 - Do not delete append-only audit logs. Prune only active working sections and archived low-value resolved items.
+
+#### Agent Lock Mechanism
+
+To prevent concurrent memory overwrites by multiple agents, agents must respect the file-based soft-lock mechanism.
+
+**Lock File Schema (`memory/.dpm_lock`)**:
+```json
+{
+  "actor": "user@machine (or Agent ID)",
+  "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+  "status": "LOCKED"
+}
+```
+
+**Lifecycle (Acquire / Override / Release)**:
+1. **Acquire**: At session start, before making edits, check for `memory/.dpm_lock`. If it does not exist, create it.
+2. **Warn/Abort**: If it exists and is less than 2 hours old, warn the user that the lock is active. Abort unless the user explicitly forces an override.
+3. **Override**: If the lock is more than 2 hours old (stale), prompt the user to override it. If approved, overwrite the file.
+4. **Release**: Delete `memory/.dpm_lock` at the end of the session.
 
 ### File Processing Skills
 

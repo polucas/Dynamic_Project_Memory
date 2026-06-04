@@ -256,14 +256,15 @@ alwaysApply: true
 # DPM Protocol
 
 ## Session Start (MANDATORY)
-1. Read IN ORDER before any other action:
+1. Acquire Lock: Check for `memory/.dpm_lock`. If exists and < 2 hours old, WARN user and abort unless forced. If stale (> 2 hours), ask to override. If none, create it.
+2. Read IN ORDER before any other action:
    - memory/01_static_context.md
    - memory/02_static_work.md
    - memory/03_running_state.md
-2. Check memory/_manifest.json and Document Index in 03 for Status = "NEW", "Stale", "Needs Review", or "Error"
+3. Check memory/_manifest.json and Document Index in 03 for Status = "NEW", "Stale", "Needs Review", or "Error"
    → If found: notify user, offer to integrate
-3. Update Session Header in 03 with today's date and actor
-4. Before editing shared memory, re-read the target section and make the smallest scoped change
+4. Update Session Header in 03 with today's date and actor
+5. Before editing shared memory, re-read the target section and make the smallest scoped change
 
 ## During Session
 - Need context on a source file? → Read memory/_summaries/[file].md FIRST
@@ -283,6 +284,7 @@ alwaysApply: true
 - Conflicting source facts? → Mark Needs Review and ask the owner/human lead
 
 ## Session End
+- Delete `memory/.dpm_lock` to release the session lock
 - Append one-line summary to Change Log in 03
 - Promote confirmed [Unverified] items to 01 or 02, then remove them from New Intel
 - Close/remove resolved Current Focus, Open Questions, and Blockers from active lists
@@ -306,6 +308,7 @@ alwaysApply: true
 # CLAUDE.md — DPM Protocol
 
 ## Session Start
+Acquire Lock: Check for `memory/.dpm_lock`. If exists and < 2 hours old, WARN user and abort unless forced. If stale (> 2 hours), ask to override. If none, create it.
 Read these files before any action:
 - memory/01_static_context.md
 - memory/02_static_work.md
@@ -339,13 +342,14 @@ Check memory/_manifest.json for changed hashes, manifest/index drift, and proces
 ### Codex / Other Agents
 
 Adapt the rules above. The contract:
-1. Read 3 memory files at start
-2. Summaries before originals
-3. Manifest and Document Index stay aligned
-4. Append-only logs, pruned active sections
-5. Never create or modify source_files/
-6. Create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
-7. STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
+1. Acquire/check `memory/.dpm_lock` at start, delete at end
+2. Read 3 memory files at start
+3. Summaries before originals
+4. Manifest and Document Index stay aligned
+5. Append-only logs, pruned active sections
+6. Never create or modify source_files/
+7. Create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
+8. STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
 
 ---
 

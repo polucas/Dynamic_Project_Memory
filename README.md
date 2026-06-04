@@ -109,6 +109,7 @@ The agent will automatically:
 
 DPM is designed for shared, long-running projects when agents follow these rules:
 
+- Respect the `memory/.dpm_lock` mechanism to prevent concurrent memory overwrites by multiple agents.
 - Use stable IDs for documents, decisions, questions, risks, and deliverables.
 - Attribute durable updates with actor and date.
 - Keep `source_files/` read-only for agents. Agents must not create, modify, move, rename, or delete files there.
