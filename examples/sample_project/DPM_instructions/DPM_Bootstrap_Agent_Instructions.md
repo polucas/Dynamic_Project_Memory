@@ -190,35 +190,6 @@ Create `memory/_manifest.json`:
 
 ## STEP 6 — Generate Extracts (_extracted/)
 
-Before extracting or summarizing files, check whether file-conversion prerequisites are installed. Prompt the user before ingestion if important tools are missing.
-
-Minimum checks:
-
-```bash
-python --version
-python -m pip show pymupdf python-docx python-pptx pandas openpyxl
-pdftotext -v
-pandoc --version
-```
-
-If scanned PDFs or legacy Office files are expected, also check:
-
-```bash
-tesseract --version
-soffice --version
-```
-
-First-run prompt pattern:
-
-```text
-I need file-conversion tools before ingesting source_files/.
-Found: [list detected tools]
-Missing or unverified: [list missing tools]
-Recommended installs: [commands for this OS]
-
-Do you want me to continue with available tools, skip unsupported files, or pause while you install the missing prerequisites?
-```
-
 For each binary file in source_files/ (docx, pptx, pdf, xlsx):
 
 1. Convert to plain text → save as `memory/_extracted/[filename_without_ext].txt`
@@ -464,8 +435,6 @@ Recommended extractors:
 | `.pptx` | `python-pptx` | Slide-by-slide text with slide numbers |
 | `.xlsx` | `pandas` + `openpyxl` | Sheet names, dimensions, headers, and representative rows |
 | `.txt`, `.md`, `.csv` | Direct read/copy or lightweight normalization | Treat source as extract; summarize directly |
-| Scanned PDFs/images | Tesseract OCR | Optional; use only when no embedded text exists |
-| Legacy `.doc`, `.ppt`, `.xls` | LibreOffice headless conversion | Prefer asking owner for modern Office formats when possible |
 
 Recommended setup:
 ```bash
@@ -479,19 +448,6 @@ brew install poppler pandoc
 
 # Windows with Chocolatey
 choco install poppler pandoc
-```
-
-Windows with winget:
-```powershell
-winget install --id Python.Python.3.12
-winget install --id JohnMacFarlane.Pandoc
-winget install --id oschwartz10612.Poppler
-```
-
-Optional OCR and legacy Office support:
-```powershell
-winget install --id UB-Mannheim.TesseractOCR
-winget install --id TheDocumentFoundation.LibreOffice
 ```
 
 For daily ingestion, create Cursor skills under `.cursor/skills/`, for example `.cursor/skills/ingestfile/SKILL.md`, `.cursor/skills/scanrepo/SKILL.md`, and `.cursor/skills/scanandingest/SKILL.md`.
