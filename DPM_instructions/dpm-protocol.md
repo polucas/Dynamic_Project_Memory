@@ -8,3 +8,4 @@ Agent rules for this sample project live under `DPM_instructions/` and your agen
 - Create or modify files only in `memory/`, `DPM_instructions/`, `agent_outputs/`, or `.agent/`.
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: creating, modifying, moving, renaming, or deleting files anywhere else.
 - Read summaries before extracted text, and extracted text before full source files.
+- If a memory file approaches/exceeds ~5,000 tokens, STOP. Ask the user if they want to remove/compress old memories, or expand the token limit for that file.

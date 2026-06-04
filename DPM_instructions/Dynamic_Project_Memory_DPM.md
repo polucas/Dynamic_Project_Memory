@@ -90,7 +90,7 @@ project/
 - **Constraints & Guardrails**: budget, compliance, data sensitivity, approval gates
 - **Reference Links**: project site, shared drives, trackers (no confidential data — reference secure locations only)
 
-Max ~200 lines.
+Max ~5,000 tokens.
 
 ### 3.2 — `02_static_work.md` (WARM)
 
@@ -104,7 +104,7 @@ Max ~200 lines.
 - **Known Risks & Mitigations**: risk, impact, mitigation, status
 - **Appendix: Promoted Decisions**: decisions promoted from 03
 
-Max ~400 lines.
+Max ~5,000 tokens.
 
 ### 3.3 — `03_running_state.md` (HOT)
 
@@ -125,7 +125,7 @@ Max ~400 lines.
 
 Active sections are not append-only. Remove or archive completed, resolved, rejected, or promoted items during maintenance so 03 remains a current working state. Append-only protection applies only to Decisions Log and Change Log.
 
-Max ~300 lines.
+Max ~5,000 tokens.
 
 ---
 
@@ -217,7 +217,7 @@ Do you want me to continue with available tools, skip unsupported files, or paus
 2. Promote confirmed items from New Intel to 01 or 02, then remove them from New Intel
 3. Close or remove completed Current Focus, Open Questions, and Blockers from active lists
 4. Archive only audit-worthy resolved items; do not preserve routine completed tasks in hot memory
-5. If 03 > 300 lines → archive older audit content to `_archive/`
+5. If 03 > 5,000 tokens → pause and ask user to clean up/compress old memories, or expand limit
 6. Promote stable patterns: repeated hot notes → 02; settled warm facts → 01
 
 ---
@@ -250,10 +250,15 @@ Do you want me to continue with available tools, skip unsupported files, or paus
 ### Size Caps
 | File | Max | Action When Exceeded |
 |---|---|---|
-| 01 | ~200 lines | Split into 01a_, 01b_ by domain |
-| 02 | ~400 lines | Split by workstream; archive settled appendices |
-| 03 | ~300 lines | Archive entries older than 2 weeks to _archive/ |
+| 01 | ~5,000 tokens | Stop and ask user: remove/compress old memories, or expand limit |
+| 02 | ~5,000 tokens | Stop and ask user: remove/compress old memories, or expand limit |
+| 03 | ~5,000 tokens | Stop and ask user: remove/compress old memories, or expand limit |
 | Each summary | ~80 lines | If longer, you're copying not summarizing |
+
+**When a memory file approaches or exceeds the 5,000 token limit:**
+The agent MUST NOT blindly continue. Instead, it must stop and ask the user:
+1. Do you want to remove or compress previous memories? (The agent should suggest specific, low-importance or older items to archive/remove).
+2. Or do you want to temporarily expand the token limit for this specific file?
 
 ### Staleness Detection
 Track each source file in `_manifest.json` using path, content hash, modified time, processed time, generated artifacts, status, and processor. If the source hash differs from the manifest hash, set Status = `Stale` in the manifest and Document Index. If hashing is unavailable, fall back to modified time.
@@ -338,8 +343,8 @@ Decisions Log ──────────►   Settled Decisions table
 ### Archival Protocol
 | Trigger | Action |
 |---|---|
-| 03 exceeds 300 lines | Move entries older than 2 weeks to `_archive/03_running_state_YYYY-MM.md` |
-| 02 exceeds 400 lines | Split by workstream or move settled appendices to `_archive/` |
+| 03 exceeds 5,000 tokens | Pause and ask user to clean up/compress old memories, or expand limit |
+| 02 exceeds 5,000 tokens | Pause and ask user to clean up/compress old memories, or expand limit |
 | Project phase complete | Snapshot all 3 files to `_archive/` with date suffix; reset 03 |
 | Source file superseded | Move old version to `_archive/`; update index |
 

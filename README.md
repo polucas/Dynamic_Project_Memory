@@ -104,6 +104,7 @@ The agent will automatically:
 - Log decisions and changes while pruning resolved active work from hot memory
 - Escalate from summary → extract → full file only when needed
 - Keep the hot file useful by closing, promoting, removing, or archiving completed items
+- Pause and prompt the user if any memory file (01, 02, 03) approaches ~5,000 tokens so that old context can be compressed or archived before continuing
 
 ## Multi-Person Projects
 

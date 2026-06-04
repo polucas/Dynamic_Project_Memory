@@ -14,6 +14,7 @@
    - `.docx`: Use `pandoc -t plain` or Python with `python-docx`. Save to `memory/_extracted/[name].txt`.
    - `.pptx`: Use `python-pptx` to extract slide-by-slide text. Save to `memory/_extracted/[name].txt`.
    - `.xlsx`: Use `pandas` and `openpyxl` to extract sheet names, dimensions, headers, and representative rows. Save to `memory/_extracted/[name].txt`.
+   - Images (`.png`, `.jpg`, `.jpeg`): Try using `tesseract` to extract text if available. If not, use your native AI vision capabilities to read the image, transcribe its contents, and save it to `memory/_extracted/[name].txt`.
    - Text native (TXT, MD, CSV): Do not extract, treat source as extract.
 6. Generate or update a summary of the file (max 80 lines) in `memory/_summaries/[name].md`.
 7. Update `memory/_manifest.json` with the new file information, Doc ID, hash, and status.

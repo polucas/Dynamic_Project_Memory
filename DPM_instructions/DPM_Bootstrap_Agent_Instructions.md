@@ -72,7 +72,7 @@ Decay: months. Only update on confirmed scope/org/platform changes.
 - No confidential data in memory — reference secure locations only
 ```
 
-**Fill instructions**: Scan source_files/ for SOWs, contracts, org charts, project briefs. Extract stable facts into each section. Max 200 lines.
+**Fill instructions**: Scan source_files/ for SOWs, contracts, org charts, project briefs. Extract stable facts into each section. Max ~5,000 tokens.
 
 ---
 
@@ -107,7 +107,7 @@ Decay: weeks. Update when deliverables, scope, or approach changes.
 <!-- Decisions promoted from 03 that are now settled -->
 ```
 
-**Fill instructions**: Read SOW, project plan, requirements docs, and methodology/approach documents in source_files/. Summarize — do not paste full specs. Max 400 lines.
+**Fill instructions**: Read SOW, project plan, requirements docs, and methodology/approach documents in source_files/. Summarize — do not paste full specs. Max ~5,000 tokens.
 
 ---
 
@@ -154,7 +154,7 @@ Decay: every session. This is your working memory.
 |---|---|---|
 ```
 
-**Fill instructions**: Set today's date and actor. Build the Document Index by listing every file in source_files/. Assign stable Doc IDs and set Status = `NEW` for all. Fill Current Focus with immediate priorities only. Max 300 lines.
+**Fill instructions**: Set today's date and actor. Build the Document Index by listing every file in source_files/. Assign stable Doc IDs and set Status = `NEW` for all. Fill Current Focus with immediate priorities only. Max ~5,000 tokens.
 
 ---
 
@@ -317,9 +317,10 @@ alwaysApply: true
 - Append one-line summary to Change Log in 03
 - Promote confirmed [Unverified] items to 01 or 02, then remove them from New Intel
 - Close/remove resolved Current Focus, Open Questions, and Blockers from active lists
-- If 03 > 300 lines → archive older audit content to _archive/
+- If 03 > 5,000 tokens → pause and ask user to clean up/compress old memories, or expand limit
 
 ## Guardrails
+- If a memory file approaches or exceeds ~5,000 tokens, STOP. Ask the user if they want to remove/compress old memories, or expand the token limit for that file.
 - NEVER create, modify, move, rename, or delete files in source_files/
 - ONLY create or modify files in memory/, DPM_instructions/, agent_outputs/, or .agent/
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
@@ -356,9 +357,10 @@ Check memory/_manifest.json for changed hashes, manifest/index drift, and proces
 - Append to Change Log in 03
 - Promote confirmed items to 01/02, then remove from active hot sections
 - Close/remove resolved Current Focus, Open Questions, and Blockers
-- Archive 03 if > 300 lines
+- Pause to ask user for memory cleanup if 03 > 5,000 tokens
 
 ## Rules
+- If a memory file approaches or exceeds ~5,000 tokens, STOP. Ask the user if they want to remove/compress old memories, or expand the token limit for that file.
 - source_files/ is read-only
 - Agents may create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
 - STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
@@ -376,9 +378,10 @@ Adapt the rules above. The contract:
 3. Summaries before originals
 4. Manifest and Document Index stay aligned
 5. Append-only logs, pruned active sections
-6. Never create or modify source_files/
-7. Create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
-8. STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
+6. If a memory file approaches/exceeds ~5,000 tokens, pause and ask the user to clean up/compress old memories, or expand the limit.
+7. Never create or modify source_files/
+8. Create or modify files only in memory/, DPM_instructions/, agent_outputs/, or .agent/
+9. STRICTLY FORBIDDEN — WILL LEAD TO TERMINATION OF THE AGENT RUN: writing anywhere else
 
 ---
 
@@ -415,10 +418,15 @@ For each indexed file:
 ### Size Caps
 | File | Max | Action When Exceeded |
 |---|---|---|
-| 01 | ~200 lines | Split into 01a_, 01b_ by domain |
-| 02 | ~400 lines | Split by workstream; archive settled appendices |
-| 03 | ~300 lines | Archive entries older than 2 weeks to _archive/ |
+| 01 | ~5,000 tokens | Stop and ask user: remove/compress old memories, or expand limit |
+| 02 | ~5,000 tokens | Stop and ask user: remove/compress old memories, or expand limit |
+| 03 | ~5,000 tokens | Stop and ask user: remove/compress old memories, or expand limit |
 | Each summary | ~80 lines | You're copying, not summarizing — rewrite |
+
+**When a memory file approaches or exceeds the 5,000 token limit:**
+The agent MUST NOT blindly continue. Instead, it must stop and ask the user:
+1. Do you want to remove or compress previous memories? (The agent should suggest specific, low-importance or older items to archive/remove).
+2. Or do you want to temporarily expand the token limit for this specific file?
 
 ### Status Values
 | Area | Values |
