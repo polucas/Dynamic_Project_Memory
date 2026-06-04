@@ -124,8 +124,8 @@ DPM is designed for shared, long-running projects when agents follow these rules
 ## Daily File Workflows
 
 - `/ingestfile [path]` processes one explicit new or changed source file.
-- `/scanrepo` reports new, changed, missing, duplicate, stale, or unprocessed files without editing.
-- `/scanandingest` scans the repo, ingests safe new or stale files, and pauses for conflicts or ambiguous cases.
+- `/scanrepo` reports new, changed, missing, duplicate, stale, or unprocessed files without editing, and asks for direction on missing files and unusual statuses.
+- `/scanandingest` scans the repo, asks for direction on missing/unusual files, ingests safe new or stale files, and pauses for conflicts or ambiguous cases.
 
 For regular ingestion, install deterministic extractors rather than asking the LLM to read full binaries: `pdftotext` or PyMuPDF for PDFs, `pandoc` or `python-docx` for Word files, `python-pptx` for PowerPoint, and `pandas` + `openpyxl` for Excel. Put reusable agent skills under your agent's skills directory (e.g., `.cursor/skills/`) and rules under its rules directory (e.g., `.cursor/rules/`).
 

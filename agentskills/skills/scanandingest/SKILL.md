@@ -8,6 +8,8 @@
 1. First, execute the equivalent of the `/scanrepo` workflow to identify all NEW, Stale, Missing, Duplicate, and Conflicting files.
 2. For all safe `NEW` and `Stale` files, automatically run the `/ingestfile` workflow (extract, summarize, manifest, index).
 3. **Pause and prompt the user** for:
+   - **Missing files**: "Should I delete this file from memory, or are you going to re-add it?"
+   - **Other statuses**: Files with statuses other than `NEW` or `Current` (what should be done with them?)
    - Duplicates
    - Unsupported file formats
    - Manifest/Index drift
